@@ -8,6 +8,8 @@ services:
     environment:
       PORT: 3001
       DATABASE_URL: postgres://postgres:postgres@db:5432/members
+      JWT_SECRET: dev-secret
+      JWT_EXPIRES_IN: 7d
     depends_on:
       - db
   db:
@@ -20,6 +22,13 @@ services:
       - "5432:5432"
     volumes:
       - members_db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+  adminer:
+    image: adminer:4
+    ports:
+      - "5050:8080"
+    depends_on:
+      - db
 
 volumes:
   members_db_data:
