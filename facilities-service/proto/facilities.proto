@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package facilities.v1;
+
+service FacilitiesService {
+  rpc ListFacilities (ListFacilitiesRequest) returns (ListFacilitiesResponse);
+  rpc CreateFacility (CreateFacilityRequest) returns (Facility);
+  rpc GetFacility (GetFacilityRequest) returns (Facility);
+  rpc ListAvailableSlots (ListAvailableSlotsRequest) returns (ListAvailableSlotsResponse);
+}
+
+message Facility {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  int32 capacity = 4;
+  string location = 5;
+}
+
+message ListFacilitiesRequest {}
+
+message ListFacilitiesResponse {
+  repeated Facility facilities = 1;
+}
+
+message CreateFacilityRequest {
+  string name = 1;
+  string type = 2;
+  int32 capacity = 3;
+  string location = 4;
+}
+
+message GetFacilityRequest {
+  string id = 1;
+}
+
+message ListAvailableSlotsRequest {
+  string facility_id = 1;
+  string date = 2; // ISO-8601 (YYYY-MM-DD)
+}
+
+message TimeSlot {
+  string start_time = 1; // ISO-8601
+  string end_time = 2;   // ISO-8601
+}
+
+message ListAvailableSlotsResponse {
+  repeated TimeSlot slots = 1;
+}

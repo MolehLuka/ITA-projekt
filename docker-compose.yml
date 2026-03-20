@@ -1,0 +1,62 @@
+services:
+  members-service:
+    build:
+      context: ./members-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://postgres:postgres@members-db:5432/members
+      JWT_SECRET: dev-secret
+      JWT_EXPIRES_IN: 7d
+    depends_on:
+      - members-db
+
+  members-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: members
+    ports:
+      - "5432:5432"
+    volumes:
+      - members_db_data:/var/lib/postgresql/data
+      - ./members-service/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+  facilities-service:
+    build:
+      context: ./facilities-service
+      dockerfile: Dockerfile
+    ports:
+      - "50052:50052"
+    environment:
+      PORT: 50052
+      DATABASE_URL: postgres://postgres:postgres@facilities-db:5432/facilities
+    depends_on:
+      - facilities-db
+
+  facilities-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: facilities
+    ports:
+      - "5433:5432"
+    volumes:
+      - facilities_db_data:/var/lib/postgresql/data
+      - ./facilities-service/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+  adminer:
+    image: adminer:4
+    ports:
+      - "5050:8080"
+    depends_on:
+      - members-db
+      - facilities-db
+
+volumes:
+  members_db_data:
+  facilities_db_data:
