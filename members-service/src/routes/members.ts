@@ -10,12 +10,13 @@ const config = getConfig();
 const baseSelect =
   "id, username, email, first_name as \"firstName\", last_name as \"lastName\", is_admin as \"isAdmin\", membership_status as \"membershipStatus\", membership_expires_at as \"membershipExpiresAt\", created_at as \"createdAt\"";
 
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const parseMemberId = (value: string) => {
-  const id = Number(value);
-  return Number.isFinite(id) ? id : null;
+  return uuidRegex.test(value) ? value : null;
 };
 
-const ensureSelfOrAdmin = (req: { user?: { id: number; isAdmin: boolean } }, memberId: number) => {
+const ensureSelfOrAdmin = (req: { user?: { id: string; isAdmin: boolean } }, memberId: string) => {
   if (!req.user) {
     return false;
   }
@@ -140,7 +141,7 @@ membersRouter.patch("/me", authenticate, async (req, res) => {
   }
 
   const updates: string[] = [];
-  const values: Array<string | null | number> = [];
+  const values: Array<string | null> = [];
 
   if (username) {
     updates.push(`username = $${values.length + 1}`);

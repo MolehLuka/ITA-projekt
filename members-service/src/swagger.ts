@@ -19,7 +19,7 @@ export const swaggerSpec = swaggerJSDoc({
         AuthUser: {
           type: "object",
           properties: {
-            id: { type: "integer", example: 1 },
+            id: { type: "string", format: "uuid", example: "4f0a4e78-2f6a-4a2c-9b07-1d6f5c5157c2" },
             username: { type: "string", example: "jdoe" },
             email: { type: "string", example: "jdoe@example.com" },
             firstName: { type: "string", example: "Jane", nullable: true },
@@ -268,7 +268,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           responses: {
@@ -296,7 +296,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           responses: {
@@ -322,7 +322,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           requestBody: {
@@ -358,7 +358,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           responses: {
@@ -386,7 +386,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           requestBody: {
@@ -422,7 +422,7 @@ export const swaggerSpec = swaggerJSDoc({
               name: "id",
               in: "path",
               required: true,
-              schema: { type: "integer" }
+              schema: { type: "string", format: "uuid" }
             }
           ],
           responses: {

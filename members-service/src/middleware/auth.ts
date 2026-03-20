@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { getConfig } from "../config.js";
 
 export type AuthUser = {
-  id: number;
+  id: string;
   username: string;
   email: string;
   isAdmin: boolean;
@@ -27,12 +27,12 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   try {
     const payload = jwt.verify(token, config.jwtSecret) as jwt.JwtPayload;
 
-    if (!payload || typeof payload.sub !== "string" && typeof payload.sub !== "number") {
+    if (!payload || typeof payload.sub !== "string") {
       return res.status(401).json({ message: "invalid token" });
     }
 
     req.user = {
-      id: Number(payload.sub),
+      id: payload.sub,
       username: String(payload.username ?? ""),
       email: String(payload.email ?? ""),
       isAdmin: Boolean(payload.isAdmin)
