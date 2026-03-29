@@ -30,3 +30,30 @@ jobs:
       - name: Run tests
         working-directory: members-service
         run: npm test
+
+  facilities-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: facilities-service/requirements.txt
+
+      - name: Install dependencies
+        working-directory: facilities-service
+        run: python -m pip install -r requirements.txt
+
+      - name: Generate gRPC stubs
+        working-directory: facilities-service
+        run: python -m grpc_tools.protoc -I ./proto --python_out=./src --grpc_python_out=./src ./proto/facilities.proto
+
+      - name: Run tests
+        working-directory: facilities-service
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -p "test_*.py"
