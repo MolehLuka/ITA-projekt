@@ -8,7 +8,7 @@ services:
     environment:
       PORT: 3001
       DATABASE_URL: postgres://postgres:postgres@members-db:5432/members
-      JWT_SECRET: dev-secret
+      JWT_SECRET: dev-secret-change-me-please-32chars
       JWT_EXPIRES_IN: 7d
     depends_on:
       - members-db
@@ -49,6 +49,43 @@ services:
       - facilities_db_data:/var/lib/postgresql/data
       - ./facilities-service/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
 
+  bookings-service:
+    build:
+      context: ./bookings-service/bookings
+      dockerfile: Dockerfile
+    ports:
+      - "3002:8080"
+    environment:
+      DB_URL: jdbc:postgresql://bookings-db:5432/bookings
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: dev-secret-change-me-please-32chars
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+    depends_on:
+      - bookings-db
+      - rabbitmq
+
+  bookings-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bookings
+    ports:
+      - "5434:5432"
+    volumes:
+      - bookings_db_data:/var/lib/postgresql/data
+      - ./bookings-service/bookings/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   adminer:
     image: adminer:4
     ports:
@@ -56,7 +93,9 @@ services:
     depends_on:
       - members-db
       - facilities-db
+      - bookings-db
 
 volumes:
   members_db_data:
   facilities_db_data:
+  bookings_db_data:
