@@ -6,6 +6,7 @@ service FacilitiesService {
   rpc ListFacilities (ListFacilitiesRequest) returns (ListFacilitiesResponse);
   rpc CreateFacility (CreateFacilityRequest) returns (Facility);
   rpc GetFacility (GetFacilityRequest) returns (Facility);
+  rpc CreateSlot (CreateSlotRequest) returns (Slot);
   rpc ListAvailableSlots (ListAvailableSlotsRequest) returns (ListAvailableSlotsResponse);
 }
 
@@ -37,6 +38,21 @@ message GetFacilityRequest {
 message ListAvailableSlotsRequest {
   string facility_id = 1;
   string date = 2; // ISO-8601 (YYYY-MM-DD)
+}
+
+message CreateSlotRequest {
+  string facility_id = 1;
+  string start_time = 2; // ISO-8601
+  string end_time = 3;   // ISO-8601
+  bool is_available = 4;
+}
+
+message Slot {
+  string id = 1;
+  string facility_id = 2;
+  string start_time = 3; // ISO-8601
+  string end_time = 4;   // ISO-8601
+  bool is_available = 5;
 }
 
 message TimeSlot {

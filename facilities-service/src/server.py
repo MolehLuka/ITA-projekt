@@ -112,6 +112,43 @@ class FacilitiesService(facilities_pb2_grpc.FacilitiesServiceServicer):
 
         return facilities_pb2.ListAvailableSlotsResponse(slots=slots)
 
+    def CreateSlot(self, request, context):
+        if not request.facility_id:
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("facility_id is required")
+            return facilities_pb2.Slot()
+
+        if not request.start_time or not request.end_time:
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("start_time and end_time are required")
+            return facilities_pb2.Slot()
+
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    insert into facility_slots (facility_id, start_time, end_time, is_available)
+                    values (%s, %s, %s, %s)
+                    returning id, facility_id, start_time, end_time, is_available
+                    """,
+                    (
+                        request.facility_id,
+                        request.start_time,
+                        request.end_time,
+                        request.is_available,
+                    ),
+                )
+                row = cur.fetchone()
+                conn.commit()
+
+        return facilities_pb2.Slot(
+            id=str(row["id"]),
+            facility_id=str(row["facility_id"]),
+            start_time=row["start_time"].isoformat(),
+            end_time=row["end_time"].isoformat(),
+            is_available=row["is_available"],
+        )
+
 
 def serve() -> None:
     load_dotenv()

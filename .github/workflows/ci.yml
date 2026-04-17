@@ -57,3 +57,24 @@ jobs:
         env:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -p "test_*.py"
+
+  bookings-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Make Maven wrapper executable
+        working-directory: bookings-service/bookings
+        run: chmod +x mvnw
+
+      - name: Run tests
+        working-directory: bookings-service/bookings
+        run: ./mvnw test
