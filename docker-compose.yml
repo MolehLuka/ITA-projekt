@@ -1,4 +1,14 @@
 services:
+  frontend-shell:
+    build:
+      context: ./frontend/shell
+      dockerfile: Dockerfile
+    ports:
+      - "8090:80"
+    depends_on:
+      - api-gateway
+      - mobile-gateway
+
   api-gateway:
     image: nginx:1.27-alpine
     ports:
