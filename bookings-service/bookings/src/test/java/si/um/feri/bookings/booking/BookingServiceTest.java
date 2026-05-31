@@ -48,6 +48,21 @@ class BookingServiceTest {
     }
 
     @Test
+    void createBookingStartsPendingAndPublishesEvent() {
+        var service = new BookingService(bookingRepository, bookingEventPublisher);
+        var memberId = UUID.randomUUID();
+        var request = request(OffsetDateTime.parse("2026-04-20T10:00:00Z"), OffsetDateTime.parse("2026-04-20T11:00:00Z"));
+
+        when(bookingRepository.findOverlappingBookings(any(), any(), any())).thenReturn(List.of());
+        when(bookingRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var response = service.createBooking(request, memberId);
+
+        assertEquals("pending", response.getStatus());
+        verify(bookingEventPublisher).publishCreated(any());
+    }
+
+    @Test
     void cancelBookingMarksCancelledAndPublishesEvent() {
         var service = new BookingService(bookingRepository, bookingEventPublisher);
         var booking = existingBooking();

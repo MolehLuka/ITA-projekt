@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import facilities_pb2
 import facilities_pb2_grpc
 from db import get_connection
+from messaging.consumer import start_saga_consumer
 
 
 class FacilitiesService(facilities_pb2_grpc.FacilitiesServiceServicer):
@@ -153,6 +154,7 @@ class FacilitiesService(facilities_pb2_grpc.FacilitiesServiceServicer):
 def serve() -> None:
     load_dotenv()
     port = os.getenv("PORT", "50052")
+    start_saga_consumer()
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     facilities_pb2_grpc.add_FacilitiesServiceServicer_to_server(FacilitiesService(), server)

@@ -13,6 +13,8 @@ public class RabbitConfig {
     public static final String BOOKING_EVENTS_EXCHANGE = "booking.events";
     public static final String BOOKING_CREATED_QUEUE = "booking.created";
     public static final String BOOKING_CANCELLED_QUEUE = "booking.cancelled";
+    public static final String SLOT_RESERVED_QUEUE = "slot.reserved";
+    public static final String SLOT_RESERVATION_FAILED_QUEUE = "slot.reservation.failed";
 
     @Bean
     public DirectExchange bookingEventsExchange() {
@@ -37,6 +39,29 @@ public class RabbitConfig {
     @Bean
     public Binding bookingCancelledBinding(DirectExchange bookingEventsExchange, Queue bookingCancelledQueue) {
         return BindingBuilder.bind(bookingCancelledQueue).to(bookingEventsExchange).with(BOOKING_CANCELLED_QUEUE);
+    }
+
+    @Bean
+    public Queue slotReservedQueue() {
+        return new Queue(SLOT_RESERVED_QUEUE, true);
+    }
+
+    @Bean
+    public Queue slotReservationFailedQueue() {
+        return new Queue(SLOT_RESERVATION_FAILED_QUEUE, true);
+    }
+
+    @Bean
+    public Binding slotReservedBinding(DirectExchange bookingEventsExchange, Queue slotReservedQueue) {
+        return BindingBuilder.bind(slotReservedQueue).to(bookingEventsExchange).with(SLOT_RESERVED_QUEUE);
+    }
+
+    @Bean
+    public Binding slotReservationFailedBinding(DirectExchange bookingEventsExchange,
+                                                Queue slotReservationFailedQueue) {
+        return BindingBuilder.bind(slotReservationFailedQueue)
+            .to(bookingEventsExchange)
+            .with(SLOT_RESERVATION_FAILED_QUEUE);
     }
 
 }

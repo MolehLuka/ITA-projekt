@@ -66,8 +66,13 @@ services:
     environment:
       PORT: 50052
       DATABASE_URL: postgres://postgres:postgres@facilities-db:5432/facilities
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
     depends_on:
       - facilities-db
+      - rabbitmq
 
   facilities-db:
     image: postgres:16-alpine
