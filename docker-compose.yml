@@ -4,17 +4,17 @@ services:
       context: ./frontend/shell
       dockerfile: Dockerfile
     ports:
-      - "8090:80"
+      - "8090:8080"
     depends_on:
       - api-gateway
       - mobile-gateway
 
   api-gateway:
-    image: nginx:1.27-alpine
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
     ports:
       - "8088:8080"
-    volumes:
-      - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - members-service
       - bookings-service
