@@ -85,6 +85,15 @@ Skrbi za ustvarjanje, pridobivanje in odpoved rezervacij.
 - **Sinhrono (REST):** Odjemalec komunicira z vsako storitvijo prek API Gateway-a.
 - **Asinhrono (RabbitMQ):** Ko je rezervacija ustvarjena ali odpovedana, storitev za rezervacije objavi dogodek. Storitev za objekte ga posluša in posodobi razpoložljivost termina — brez neposrednega klicanja med storitvama.
 
+### Saga (koreografija) za ustvarjanje rezervacije
+
+1. **Bookings** shrani rezervacijo s statusom `pending` in objavi `booking.created`.
+2. **Facilities** rezervira termin (nastavi `is_available = false` za ustrezni slot).
+3. Ob uspehu Facilities objavi `slot.reserved` → Bookings posodobi status na `confirmed`.
+4. Ob neuspehu Facilities objavi `slot.reservation.failed` → Bookings **kompenzira** (status `cancelled`).
+
+Odpoved rezervacije: `booking.cancelled` → Facilities sprosti termin (`is_available = true`).
+
 ---
 
 ## Arhitekturni diagram

@@ -43,7 +43,7 @@ public class BookingService {
             request.getFacilityId(),
             request.getStartTime(),
             request.getEndTime(),
-            "created",
+            "pending",
             now
         );
 

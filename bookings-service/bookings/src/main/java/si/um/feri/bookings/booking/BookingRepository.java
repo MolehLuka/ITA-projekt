@@ -16,7 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
         where b.facilityId = :facilityId
           and b.startTime < :endTime
           and b.endTime > :startTime
-          and b.status = 'created'
+          and b.status in ('pending', 'confirmed')
         """)
     List<Booking> findOverlappingBookings(
             @Param("facilityId") UUID facilityId,
