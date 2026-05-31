@@ -11,6 +11,15 @@ if [ -n "$RESOLVER_IP" ]; then
   sed -i "s|resolver 127.0.0.11 valid=10s ipv6=off;|resolver ${RESOLVER_IP} valid=10s ipv6=off;|" /tmp/nginx/app.conf
 fi
 
+# On Kubernetes/OpenShift nginx's resolver does not apply search domains, so
+# bare service names fail. Expand upstreams to in-namespace FQDNs.
+NS_FILE=/var/run/secrets/kubernetes.io/serviceaccount/namespace
+if [ -f "$NS_FILE" ]; then
+  NS="$(tr -d '[:space:]' < "$NS_FILE")"
+  sed -i "s|api-gateway:8080|api-gateway.${NS}.svc.cluster.local:8080|g" /tmp/nginx/app.conf
+  sed -i "s|mobile-gateway:8081|mobile-gateway.${NS}.svc.cluster.local:8081|g" /tmp/nginx/app.conf
+fi
+
 cat > /tmp/nginx/nginx.conf <<'EOF'
 pid /tmp/nginx/nginx.pid;
 
