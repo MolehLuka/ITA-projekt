@@ -101,3 +101,13 @@ Odpoved rezervacije: `booking.cancelled` → Facilities sprosti termin (`is_avai
 ![Arhitekturni diagram](./docs/diagram.png)
 
 ---
+
+## Testiranje prek frontend shell
+
+Za ročno testiranje (lokalno ali OpenShift) uporabi vnaprej pripravljene vrednosti za copy-paste v testni UI:
+
+**[FRONTEND-TEST-DATA.md](./FRONTEND-TEST-DATA.md)**
+
+Frontend uporablja **Module Federation** (shell + 3 remotes). Glej **[frontend/README.md](./frontend/README.md)**.
+
+---

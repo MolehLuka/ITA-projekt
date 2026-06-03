@@ -1,7 +1,7 @@
 services:
   frontend-shell:
     build:
-      context: ./frontend/shell
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "8090:8080"

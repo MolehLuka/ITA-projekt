@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+public/mf/*
+!public/mf/.gitkeep
 *.local
 
 # Editor directories and files
