@@ -100,7 +100,7 @@ jobs:
           - image: mobile-gateway
             context: mobile-gateway
           - image: frontend-shell
-            context: frontend/shell
+            context: frontend
           - image: api-gateway
             context: api-gateway
     steps:

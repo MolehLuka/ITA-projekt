@@ -1,8 +1,6 @@
-import { BookingsTester } from './components/BookingsTester'
-import { FacilitiesTester } from './components/FacilitiesTester'
 import { GatewayHealthPanel } from './components/GatewayHealthPanel'
-import { MembersTester } from './components/MembersTester'
 import { QuickLinksPanel } from './components/QuickLinksPanel'
+import { RemoteSlot } from './components/RemoteSlot'
 
 function App() {
   return (
@@ -13,16 +11,29 @@ function App() {
             Sports Booking Frontend Shell
           </h1>
           <p className="text-slate-600">
-          Step 1 foundation: a lightweight client to validate gateways and open
-          service docs quickly.
+            Micro-frontend host: loads Members, Facilities, and Bookings at
+            runtime via Module Federation.
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            Remotes: members-mfe · facilities-mfe · bookings-mfe
           </p>
         </header>
 
         <GatewayHealthPanel />
         <QuickLinksPanel />
-        <MembersTester />
-        <FacilitiesTester />
-        <BookingsTester />
+
+        <RemoteSlot
+          label="Members"
+          loader={() => import('members/MembersApp')}
+        />
+        <RemoteSlot
+          label="Facilities"
+          loader={() => import('facilities/FacilitiesApp')}
+        />
+        <RemoteSlot
+          label="Bookings"
+          loader={() => import('bookings/BookingsApp')}
+        />
       </div>
     </main>
   )

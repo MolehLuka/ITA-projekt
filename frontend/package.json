@@ -1,0 +1,13 @@
+{
+  "name": "frontend",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n shell,members,facilities,bookings \"npm run dev --prefix shell\" \"npm run dev --prefix members-mfe\" \"npm run dev --prefix facilities-mfe\" \"npm run dev --prefix bookings-mfe\"",
+    "build:remotes": "npm run build --prefix members-mfe && npm run build --prefix facilities-mfe && npm run build --prefix bookings-mfe",
+    "stage:remotes": "node scripts/stage-remotes.mjs",
+    "build": "npm run build:remotes && npm run stage:remotes && npm run build --prefix shell"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
